@@ -12,6 +12,7 @@
  var authorizeButton = document.getElementById('authorize_button');
  var signoutButton = document.getElementById('signout_button');
 
+
  /**
   *  On load, called to load the auth2 library and API client library.
   */
@@ -50,8 +51,6 @@
    if (isSignedIn) {
      authorizeButton.style.display = 'none';
      signoutButton.style.display = 'block';
-     getData();
-     getMeds();
    } else {
      authorizeButton.style.display = 'block';
      signoutButton.style.display = 'none';
@@ -88,7 +87,7 @@
   * Print the names and majors of students in a sample spreadsheet:
   * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
   */
- function getData() {
+ function getMedSeries() {
    var data;
    gapi.client.sheets.spreadsheets.values.get({
      spreadsheetId: '1nLBX1Y-3P_d-RsuD6IeJ1AEZ26IgCm1rQPhthocagZ0',
@@ -96,9 +95,8 @@
    }).then(function(response) {
      data = response.result;
      if (data.values.length > 0) {
-       appendPre('Name, Major:');
-       console.log(data)
-       return data;
+       console.log(data.values)
+       return data.values;
      } else {
        appendPre('No data found.');
      }
@@ -107,6 +105,58 @@
    });
  }
 
+
+ function updateSeriesNames() {
+  var data;
+  gapi.client.sheets.spreadsheets.values.get({
+    spreadsheetId: '1nLBX1Y-3P_d-RsuD6IeJ1AEZ26IgCm1rQPhthocagZ0',
+    range: 'ProdutoLote!A2:D',
+  }).then(function(response) {
+    data = response.result;
+    if (data.values.length > 0) {
+      console.log(data.values)
+      listMedSeries = data.values;
+      var medName=document.getElementById("medInput").value;
+      console.log(medName)
+      selectedItems = listMedSeries.filter(function(el) {
+        return el[0] == medName;
+      })
+    console.log(selectedItems)
+    var str='';
+    for (var i=0; i < selectedItems.length;++i){
+      str += '<option value="'+selectedItems[i][1]+'" />'; // Storing options in variable
+    }
+    var seriesList=document.getElementById("seriesSelection");
+    seriesList.innerHTML = str;
+
+    var str2='';
+    for (var i=0; i < selectedItems.length;++i){
+      str2 += '<option data-option='+selectedItems[i][1]+' value="'+selectedItems[i][2]+'" />'; // Storing options in variable
+    }
+    var valList=document.getElementById("valDateSelection");
+    valList.innerHTML = str2;
+
+    } else {
+      appendPre('No data found.');
+    }
+  }, function(response) {
+    appendPre('Error: ' + response.result.error.message);
+  });
+ }
+
+function valSel() {
+  var seriesVal=document.getElementById("seriesInput").value;
+  var valForm=document.getElementById("valDateSelection");
+  var options = valForm.querySelectorAll('option');;
+  var valDateInput = document.getElementById("valInput");
+  for(var i = 0; i < options.length; i++) {
+    if(options[i].dataset.option === seriesVal) {
+      valDateInput.value=options[i].value;
+    }
+  }
+}
+
+ 
  function getMeds() {
     var data;
     gapi.client.sheets.spreadsheets.values.get({
@@ -116,9 +166,16 @@
     }).then(function(response) {
       data = response.result;
       if (data.values.length > 0) {
-        console.log(data)
-        $("#medicaments").autocomplete({source: data.values});
-        return data;
+        console.log(data.values);
+        var str='';
+        var newOptions = data.values[0];
+        for (var i=0; i < data.values[0].length;++i){
+          str += '<option value="'+data.values[0][i]+'" />'; // Storing options in variable
+          }
+        var my_list=document.getElementById("medicamentSelection");
+        my_list.innerHTML = str;
+
+        return data.values[0];
       } else {
         appendPre('No data found.');
       }
@@ -126,3 +183,56 @@
       appendPre('Error: ' + response.result.error.message);
     });
   }
+
+  function setBarCode(barCode, medName, seriesName, valDate) {
+    var params = {
+      spreadsheetId: '1nLBX1Y-3P_d-RsuD6IeJ1AEZ26IgCm1rQPhthocagZ0',  // TODO: Update placeholder value.
+      range: 'BarCode!A1:D1',  // TODO: Update placeholder value.
+      // How the input data should be interpreted.
+      valueInputOption: 'RAW',
+      insertDataOption: 'INSERT_ROWS',
+    };
+
+    var valueRangeBody = {
+      "range": 'BarCode!A1:D1',  //Set this to cell want to add 'x' to.
+        "majorDimension": "ROWS",
+        "values": [
+          [barCode, medName, seriesName, valDate]]
+    };
+
+    var request = gapi.client.sheets.spreadsheets.values.append(params, valueRangeBody);
+      request.then(function(response) {
+        // TODO: Change code below to process the `response` object:
+        console.log(response.result);
+      }, function(reason) {
+        console.error('error: ' + reason.result.error.message);
+      }
+    );
+  }
+
+  function addRegister(medName, seriesName, valDate, value) {
+    var params = {
+      spreadsheetId: '1nLBX1Y-3P_d-RsuD6IeJ1AEZ26IgCm1rQPhthocagZ0',  // TODO: Update placeholder value.
+      range: 'Registros!A1:D1',  // TODO: Update placeholder value.
+      // How the input data should be interpreted.
+      valueInputOption: 'RAW',
+      insertDataOption: 'INSERT_ROWS',
+    };
+
+    var valueRangeBody = {
+      "range": 'Registros!A1:D1',  //Set this to cell want to add 'x' to.
+        "majorDimension": "ROWS",
+        "values": [
+          [medName, seriesName, valDate, value]]
+    };
+
+    var request = gapi.client.sheets.spreadsheets.values.append(params, valueRangeBody);
+      request.then(function(response) {
+        // TODO: Change code below to process the `response` object:
+        console.log(response.result);
+      }, function(reason) {
+        console.error('error: ' + reason.result.error.message);
+      }
+    );
+  }
+

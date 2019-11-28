@@ -282,9 +282,8 @@ $(function() {
 
     Quagga.onDetected(function(result) {
         var code = result.codeResult.code;
-        $( "#bar_code" ).autocomplete({
-            source: code
-          });
+        var barCode = document.getElementById('bar_code')
+        barCode.value = code
         alert(code)
         if (App.lastResult !== code) {
             App.lastResult = code;
