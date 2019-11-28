@@ -287,9 +287,9 @@ $(function() {
             App.lastResult = code;
             var $node = null, canvas = Quagga.canvas.dom.image;
 
-            $node = $('<li><div class="thumbnail"><div class="imgWrapper"><img /></div><div class="caption"<a href="/index/?bar_code='+code+'"><h4 class="code" ></h4></a></div></div></li>');
+            $node = $('<li><div class="thumbnail"><div class="imgWrapper"><img /></div><div class="caption"><h4 class="code"></h4></div></div></li>');
             $node.find("img").attr("src", canvas.toDataURL());
-            $node.find("h4.code").html(code);
+            $node.find("h4.code").html('<a href="/index/?bar_code="'+code+'>'+code+'</a>');
             $("#result_strip ul.thumbnails").prepend($node);
         }
     });
