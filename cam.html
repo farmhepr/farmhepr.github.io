@@ -25,7 +25,7 @@
       </div>
 
       <div>
-        <video id="video" width="300" height="200" style="border: 1px solid gray"></video>
+        <video id="video" width="600" height="400" style="border: 1px solid gray"></video>
       </div>
 
       <div id="sourceSelectPanel" style="display:none">
@@ -41,7 +41,45 @@
       </a>
 
   </main>
-
+  <div id="nav">
+      <style>
+          .navbar {
+            overflow: hidden;
+            background-color: #333;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+          }
+        
+          .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+          }
+        
+          .navbar a:hover {
+            background: #f1f1f1;
+            color: black;
+          }
+        
+          .navbar a.active {
+            background-color: #4CAF50;
+            color: white;
+          }
+        </style>
+        
+        
+        <div class="navbar">
+          <a href="cam.html">Leitor</a>
+          <a href="index.html">Registro</a>
+        
+        </div>
+        
+  </div>
   <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
   <script type="text/javascript">
     window.addEventListener('load', function () {
@@ -70,7 +108,7 @@
               if (result) {
                 console.log(result)
                 document.getElementById('result').textContent = result.text
-                document.getElementById('bclink').href = "/index.html/?bar_code="+result.text
+                document.getElementById('bclink').href = "/index/?bar_code="+result.text
                 document.getElementById('barcode').textContent = result.text
 
               }

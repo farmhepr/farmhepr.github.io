@@ -13,19 +13,23 @@
     <button id="authorize_button" style="display: none;">Authorize</button>
     <button id="signout_button" style="display: none;">Sign Out</button>
    
+
+
     <div class="form-group">
     <span>Código de barras</span>
 
     <p></p>
 
       <input  id="bar_code"/>
+      <button onclick="getSheet('BarCode!A2:D', updateForm)">Buscar</button>
     </div>
 
     <div class="form-group">
 
       <span>Medicamento</span>
       <p></p>
-      <input list="medicamentSelection" id='medInput' name="medicament" onfocus="getMeds()" onchange="updateSeriesNames()">
+      <input list="medicamentSelection" id='medInput' name="medicament" 
+        onfocus="getSheet('Medicamentos!A2:A',updateMeds)" onchange="getSheet('ProdutoLote!A2:D',updateSeries)">
       <datalist id="medicamentSelection">
       </datalist>
     </div>
@@ -35,7 +39,8 @@
       <span>Lote</span>
       <p></p>
 
-      <input list="seriesSelection" id='seriesInput' name="series" onchange="valSel()">
+      <input list="seriesSelection" id='seriesInput' name="series" 
+        onchange="valSel()">
       <datalist id="seriesSelection">
       </datalist>
     </div>
@@ -49,7 +54,62 @@
       <datalist id="valDateSelection">
       </datalist>
     </div>
+
+    <div class="form-group">
+
+      <span>Quantidade</span>
+      <p></p>
+
+      <input type="number" id='qnt' name="qnt">
+
+    </div>
+
+    <button onclick="sendReg()">Enviar Saída</button>
+    <button onclick="sendCod()">Cadatrar Código</button>
+
+    
 </div>
+
+<div id="nav">
+    <style>
+        .navbar {
+          overflow: hidden;
+          background-color: #333;
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+        }
+      
+        .navbar a {
+          float: left;
+          display: block;
+          color: #f2f2f2;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+          font-size: 17px;
+        }
+      
+        .navbar a:hover {
+          background: #f1f1f1;
+          color: black;
+        }
+      
+        .navbar a.active {
+          background-color: #4CAF50;
+          color: white;
+        }
+      </style>
+      
+      
+      <div class="navbar">
+        <a href="cam.html">Leitor</a>
+        <a href="index.html">Registro</a>
+      
+      </div>
+      
+</div>
+
     <pre id="content" style="white-space: pre-wrap;"></pre>
     <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
@@ -58,10 +118,19 @@
     <script src="gsheets.js" type="text/javascript"></script>
     <script src="url.js" type="text/javascript"></script>
 
-    <script async defer src="https://apis.google.com/js/api.js"
-      onload="this.onload=function(){};handleClientLoad()"
-      onreadystatechange="if (this.readyState === 'complete') this.onload()">
-      document.getElementById("bar_code").value = getAllUrlParams().bar_code
+ 
+
+    <script >
+      var barCodeVal = getAllUrlParams().bar_code
+      console.log(barCodeVal);
+      if(!(typeof (barCodeVal) === 'undefined')) {
+        document.getElementById("bar_code").value = barCodeVal;
+        
+      }
     </script>
+       <script async defer src="https://apis.google.com/js/api.js"
+       onload="this.onload=function(){};handleClientLoad()"
+       onreadystatechange="if (this.readyState === 'complete') this.onload()">
+     </script>
   </body>
 </html>
