@@ -11,6 +11,7 @@
 
  var authorizeButton = document.getElementById('authorize_button');
  var signoutButton = document.getElementById('signout_button');
+ var sendCodButton = document.getElementById('sendCodId');
 
  var SPREADSHEET_ID = '1nLBX1Y-3P_d-RsuD6IeJ1AEZ26IgCm1rQPhthocagZ0';
 
@@ -147,13 +148,15 @@
   console.log(selectedItems.length)
 
   if(selectedItems.length==1){
+    sendCodButton.style.display = 'none';
     document.getElementById('medInput').value=selectedItems[0][1];
     document.getElementById('seriesInput').value=selectedItems[0][2];
     document.getElementById('valInput').value=selectedItems[0][3];
 
-  } else if(selectedItems.length>1) {
-    
+  } else  {
+    sendCodButton.style.display = 'block';
   }
+
 
 }
 

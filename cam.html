@@ -84,7 +84,7 @@
       codeReader.getVideoInputDevices()
         .then((videoInputDevices) => {
           const sourceSelect = document.getElementById('sourceSelect')
-          selectedDeviceId = videoInputDevices[videoInputDevices.length-1].deviceId
+          selectedDeviceId = videoInputDevices[0].deviceId
           if (videoInputDevices.length >= 1) {
             videoInputDevices.forEach((element) => {
               const sourceOption = document.createElement('option')
@@ -97,6 +97,7 @@
             };
             const sourceSelectPanel = document.getElementById('sourceSelectPanel')
             sourceSelectPanel.style.display = 'block'
+            sourceSelect.value = videoInputDevices[videoInputDevices.length-1].deviceId
           }
           startVideo(codeReader);
           document.getElementById('sourceSelect').addEventListener('change', () => {
