@@ -250,7 +250,7 @@ function valSel() {
     };
 
     var valueRangeBody = {
-      "range": 'Registros!A1:G',  //Set this to cell want to add 'x' to.
+      "range": 'Registros!B1:G',  //Set this to cell want to add 'x' to.
         "majorDimension": "ROWS",
         "values": [
           ['SAIDA', dataAtualFormatada(), 'FARMACIA INTERNA (CONSUMO)', medName, seriesName, valDate, 0, value]]
