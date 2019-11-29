@@ -230,7 +230,7 @@ function valSel() {
     var request = gapi.client.sheets.spreadsheets.values.append(params, valueRangeBody);
       request.then(function(response) {
         // TODO: Change code below to process the `response` object:
-        console.log(response.result);
+        alert(response.result);
       }, function(reason) {
         alert('error: ' + reason.result.error.message);
       }
@@ -256,7 +256,7 @@ function valSel() {
     var request = gapi.client.sheets.spreadsheets.values.append(params, valueRangeBody);
       request.then(function(response) {
         // TODO: Change code below to process the `response` object:
-        console.log(response.result);
+        alert(response.result);
       }, function(reason) {
         alert('error: ' + reason.result.error.message);
       }
