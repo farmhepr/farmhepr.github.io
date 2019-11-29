@@ -243,7 +243,7 @@ function valSel() {
   function addRegister(medName, seriesName, valDate, value) {
     var params = {
       spreadsheetId: '1nLBX1Y-3P_d-RsuD6IeJ1AEZ26IgCm1rQPhthocagZ0',  // TODO: Update placeholder value.
-      range: 'Registros!A1:G',  // TODO: Update placeholder value.
+      range: 'Registros!B1:G',  // TODO: Update placeholder value.
       // How the input data should be interpreted.
       valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
@@ -253,7 +253,7 @@ function valSel() {
       "range": 'Registros!A1:G',  //Set this to cell want to add 'x' to.
         "majorDimension": "ROWS",
         "values": [
-          ['','SAIDA', dataAtualFormatada(), 'FARMACIA INTERNA (CONSUMO)', medName, seriesName, valDate, 0, value]]
+          ['SAIDA', dataAtualFormatada(), 'FARMACIA INTERNA (CONSUMO)', medName, seriesName, valDate, 0, value]]
     };
 
     var request = gapi.client.sheets.spreadsheets.values.append(params, valueRangeBody);
