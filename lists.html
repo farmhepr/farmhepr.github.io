@@ -20,35 +20,14 @@
       </div>
       </div>
       <button class="btn btn-primary mb-2" onclick="getSheet('Registros!B1:I',
-      function(tableData){
-        var table = document.getElementById('registersList');
-        var tableBody = document.createElement('tbody');
+      function(data){
+        createTable(data,'registersList')})">Lista de registros</button>
 
-        tableData.forEach(function(rowData) {
-          var row = document.createElement('tr');
-
-          rowData.forEach(function(cellData) {
-            var cell = document.createElement('td');
-            cell.appendChild(document.createTextNode(cellData));
-            row.appendChild(cell);
-          });
-
-    tableBody.appendChild(row);
-  });
-
-  table.appendChild(tableBody);
-  document.body.appendChild(table);
-
-      })">Lista de registros</button>
-
-      <div class="container-sm">
           <div class="table-responsive-lg">
               <table class="table" id="registersList">
                 
               </table>
             </div>
-    
-      </div>
   </div>
 
   <pre id="content" style="white-space: pre-wrap;"></pre>

@@ -55,7 +55,7 @@ function initClient() {
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     authorizeButton.style.display = 'none';
-    signoutButton.style.display = 'block';
+    signoutButton.style.display = 'none';
   } else {
     authorizeButton.style.display = 'block';
     signoutButton.style.display = 'none';
@@ -247,3 +247,24 @@ function dataAtualFormatada(){
   return diaF+"/"+mesF+"/"+anoF;
 }
 
+function createTable(tableData, tableId){
+  var table = document.getElementById(tableId);
+  var tableBody = document.createElement('tbody');
+  table.innerHTML = '';
+
+  tableData.forEach(function(rowData) {
+    var row = document.createElement('tr');
+
+    rowData.forEach(function(cellData) {
+      var cell = document.createElement('td');
+      cell.appendChild(document.createTextNode(cellData));
+      row.appendChild(cell);
+    });
+
+tableBody.appendChild(row);
+});
+
+table.appendChild(tableBody);
+document.body.appendChild(table);
+
+    }
