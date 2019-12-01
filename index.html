@@ -25,7 +25,7 @@
       <p></p>
       <div class="form-row">
       <div class="col-7">
-      <input  class="form-control" id="bar_code"/>
+      <input type="search" class="form-control" id="bar_code"/>
       </div>
       <div class="col">
       <button onclick="getSheet('BarCode!A2:D', updateFormBarCode)" class="btn btn-primary mb-2">Buscar</button>
@@ -37,8 +37,8 @@
       <div class="form-group">
         <span>Medicamento</span>
         <p></p>
-        <input  class="form-control" list="medicamentSelection" id='medInput' name="medicament" 
-          onfocus="getSheet('Medicamentos!A2:A',updateMeds)" onchange="getSheet('ProdutoLote!A2:D',updateFormMedName)">
+        <input type="search" class="form-control" list="medicamentSelection" id='medInput' name="medicament" 
+          onchange="getSheet('ProdutoLote!A2:D',updateFormMedName)">
         <datalist id="medicamentSelection">
         </datalist>
       </div>
@@ -46,7 +46,7 @@
       <div class="form-group">
         <span>Lote</span>
         <p></p>
-        <input  class="form-control" list="seriesSelection" id='seriesInput' name="series" onchange="valSel()">
+        <input type="search" class="form-control" list="seriesSelection" id='seriesInput' name="series" onchange="valSel()">
         <datalist id="seriesSelection">
         </datalist>
       </div>
@@ -54,7 +54,7 @@
       <div class="form-group">
         <span>Validade</span>
         <p></p>
-        <input  class="form-control" list="valDateSelection" id='valInput' name="valDate">
+        <input type="search" class="form-control" list="valDateSelection" id='valInput' name="valDate">
         <datalist id="valDateSelection">
         </datalist>
       </div>
@@ -65,7 +65,7 @@
 
         <div class="form-row">
             <div class="col">
-        <input  class="form-control" type="number" id='qnt' name="qnt">
+        <input type="search" class="form-control" type="number" id='qnt' name="qnt">
       </div>
 
           <div class="col">
@@ -96,7 +96,7 @@
     }
   </script>
   <script async defer src="https://apis.google.com/js/api.js"
-    onload="this.onload=function(){};handleClientLoad()"
+    onload="this.onload=function(){};handleClientLoad(function(){initClient(function(){getSheet('Medicamentos!A2:A',updateMeds);});})"
     onreadystatechange="if (this.readyState === 'complete') this.onload()">
   </script>
 </body>

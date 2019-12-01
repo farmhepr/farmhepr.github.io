@@ -18,8 +18,8 @@ var SPREADSHEET_ID = '1nLBX1Y-3P_d-RsuD6IeJ1AEZ26IgCm1rQPhthocagZ0';
  /**
   *  On load, called to load the auth2 library and API client library.
   */
-function handleClientLoad() {
-  gapi.load('client:auth2', initClient);
+function handleClientLoad(callback) {
+  gapi.load('client:auth2', callback);
 }
 
 
@@ -27,7 +27,7 @@ function handleClientLoad() {
   *  Initializes the API client library and sets up sign-in state
   *  listeners.
   */
-function initClient() {
+function initClient(callback) {
   gapi.client.init({
     apiKey: API_KEY,
     clientId: CLIENT_ID,
@@ -36,11 +36,12 @@ function initClient() {
   }).then(function () {
     // Listen for sign-in state changes.
     gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
+    isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get()
     // Handle the initial sign-in state.
-    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-    
-    
+    updateSigninStatus(isSignedIn);
+    if (isSignedIn) {
+      callback();
+    }
     authorizeButton.onclick = handleAuthClick;
     signoutButton.onclick = handleSignoutClick;
   }, function(error) {
@@ -126,9 +127,9 @@ function updateFormBarCode(data){
 
   if(selectedItems.length == 1){
     sendCodButton.style.display = 'none';
-    medInput.value    = selectedItems[0][1];
-    seriesInput.value = selectedItems[0][2];
-    valInput.value    = selectedItems[0][3];
+    medInput.value    = typeof selectedItems[0][1] === "undefined" ? '': selectedItems[0][1];
+    seriesInput.value = typeof selectedItems[0][2] === "undefined" ? '': selectedItems[0][2];
+    valInput.value    = typeof selectedItems[0][3] === "undefined" ? '': selectedItems[0][3];
 
   } else if (selectedItems.length == 0) {
     sendCodButton.style.display = 'block';
@@ -184,7 +185,6 @@ function getSheet(sheetRange, callback) {
     range: sheetRange,
   }).then(function(response) {
     var data = response.result;
-    console.log(data.values)
     if (data.values.length > 0) {
       console.log(data.values)
       callback(data.values);
@@ -251,20 +251,15 @@ function createTable(tableData, tableId){
   var table = document.getElementById(tableId);
   var tableBody = document.createElement('tbody');
   table.innerHTML = '';
-
   tableData.forEach(function(rowData) {
     var row = document.createElement('tr');
-
     rowData.forEach(function(cellData) {
       var cell = document.createElement('td');
       cell.appendChild(document.createTextNode(cellData));
       row.appendChild(cell);
     });
-
-tableBody.appendChild(row);
-});
-
-table.appendChild(tableBody);
-document.body.appendChild(table);
-
-    }
+  tableBody.appendChild(row);
+  });
+  table.appendChild(tableBody);
+  document.body.appendChild(table);
+}
