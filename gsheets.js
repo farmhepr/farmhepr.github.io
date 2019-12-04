@@ -15,18 +15,11 @@ var sendCodButton = document.getElementById('sendCodId');
 
 var SPREADSHEET_ID = '1nLBX1Y-3P_d-RsuD6IeJ1AEZ26IgCm1rQPhthocagZ0';
 
- /**
-  *  On load, called to load the auth2 library and API client library.
-  */
 function handleClientLoad(callback) {
   gapi.load('client:auth2', callback);
 }
 
 
- /**
-  *  Initializes the API client library and sets up sign-in state
-  *  listeners.
-  */
 function initClient(callback) {
   gapi.client.init({
     apiKey: API_KEY,
@@ -49,10 +42,6 @@ function initClient(callback) {
   });
 }
 
- /**
-  *  Called when the signed in status changes, to update the UI
-  *  appropriately. After a sign-in, the API is called.
-  */
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     authorizeButton.style.display = 'none';
@@ -63,32 +52,19 @@ function updateSigninStatus(isSignedIn) {
   }
 }
 
- /**
-  *  Sign in the user upon button click.
-  */
 function handleAuthClick(event) {
   gapi.auth2.getAuthInstance().signIn();
 }
 
- /**
-  *  Sign out the user upon button click.
-  */
 function handleSignoutClick(event) {
   gapi.auth2.getAuthInstance().signOut();
 }
 
- /**
-  * Append a pre element to the body containing the given message
-  * as its text node. Used to display the results of the API call.
-  *
-  * @param {string} message Text to be placed in pre element.
-  */
 function appendPre(message) {
   var pre = document.getElementById('content');
   var textContent = document.createTextNode(message + '\n');
   pre.appendChild(textContent);
 }
-
 
 function updateMeds(data) {
   var str='';
@@ -118,27 +94,40 @@ function updateFormMedName(data) {
 }
 
 function updateFormBarCode(data){
-  var barCode       = document.getElementById('bar_code').value;
-  var medInput      = document.getElementById('medInput');
-  var seriesInput   = document.getElementById('seriesInput');
-  var valInput      = document.getElementById('valInput');
+  var barCode           = document.getElementById('bar_code').value;
+  var barCodeSelection  = document.getElementById('barCodeSelection')
+  var barCodeOptionsStr = '';
   var selectedItems = data.filter(function(el) {return el[0] == barCode;});
   console.log(selectedItems.length)
+  barCodeOptionsStr += `<option selected="selected" hidden>Selecione o produto</option>`
 
-  if(selectedItems.length == 1){
-    sendCodButton.style.display = 'none';
-    medInput.value    = typeof selectedItems[0][1] === "undefined" ? '': selectedItems[0][1];
-    seriesInput.value = typeof selectedItems[0][2] === "undefined" ? '': selectedItems[0][2];
-    valInput.value    = typeof selectedItems[0][3] === "undefined" ? '': selectedItems[0][3];
+  for (var i = 0; i < selectedItems.length; ++i){
+    selectedItems[i][1] = typeof selectedItems[i][1] === "undefined" ? '': selectedItems[i][1];
+    selectedItems[i][2] = typeof selectedItems[i][2] === "undefined" ? '': selectedItems[i][2];
+    selectedItems[i][3] = typeof selectedItems[i][3] === "undefined" ? '': selectedItems[i][3];
+    console.log(JSON.stringify(selectedItems))
+    barCodeOptionsStr += `<option value='${JSON.stringify(selectedItems[i])}'>${selectedItems[i][1]} \nL: ${selectedItems[i][2]}</option>`;
+  }
+var no_items = ['','','','']
+barCodeOptionsStr += `<option value=${JSON.stringify(no_items)}>Produto não cadastrado</option>`;
+  barCodeSelection.innerHTML = barCodeOptionsStr;
+}
 
-  } else if (selectedItems.length == 0) {
+function updateFormSelectBarCode(){
+  var barCodeSelection  = document.getElementById('barCodeSelection').value;
+  console.log(barCodeSelection);
+  var medInput          = document.getElementById('medInput');
+  var seriesInput       = document.getElementById('seriesInput');
+  var valInput          = document.getElementById('valInput');
+  selectedItem = JSON.parse(barCodeSelection);
+  medInput.value    = selectedItem[1];
+  seriesInput.value = selectedItem[2];
+  valInput.value    = selectedItem[3];
+
+  if(barCodeSelection == '["","","",""]'){
     sendCodButton.style.display = 'block';
-    medInput.value    = '';
-    seriesInput.value = '';
-    valInput.value    = '';
-
-  } else if (selectedItems.length > 1){
-    alert('Mais de um medicamento com código de barras correpondente');
+  } else {
+    sendCodButton.style.display = 'none';
   }
 }
 
