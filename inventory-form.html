@@ -2,7 +2,7 @@
 <html lang="pt">
 
 <head>
-  <title>Stock AUX - Registro</title>
+  <title>Stock AUX - Inventário</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"
@@ -27,7 +27,7 @@
       <button id="signout_button" class="btn btn-primary mb-2" style="display: none;">Logoff</button>
     </div>
   </div>
-  <h4 align="center">Formulário de Registro de Saídas</h4>
+  <h4 align="center">Inventário</h4>
   <div id="scanner-div" style="display: none;">
     <video id="video" class="center" style="max-width:80%; border: 1px solid gray"></video>
     <div id="sourceSelectPanel" class="center" style="display:none">
@@ -55,29 +55,34 @@
 
         </div>
       </div>
-      <select id="barCodeSelection" class="form-control" onchange="updateFormSelectBarCode()"
+      <select id="barCodeSelection" class="form-control" onchange="updateFormSelectBarCode();
+        getSheet('ProdutoLote!A1:D', 
+          function(data) {
+            updateFormMedName(data);
+            data = data.filter(function (el) { return el[0] == document.getElementById('medInput').value; });
+            createTable(data,'medicamentList',ignore=[2], caption='ESTOQUE')
+          });
+          getSheet('Inventario!E1:H', 
+          function(data) {
+            data = data.filter(function (el) { return el[0] == document.getElementById('medInput').value; });
+           createTable(data,'inventoryList', ignore=[2], caption='INVENTARIO')})"
         style="width:100%;max-width:90%;"></select>
 
     </div>
-    <div id="form-register" style="display: none;">
-      <div class="container">
-        <div class="form-row">
-          <div class="col">
-            <input class="form-check-input" type="radio" name="destinationRadio" id="inlineRadio1"
-              value="FARMACIA INTERNA (CONSUMO)" checked>
-            <label class="form-check-label" for="inlineRadio1">Farm. INTERNA</label>
-          </div>
-          <div class="col">
-            <input class="form-check-input" type="radio" name="destinationRadio" id="inlineRadio2"
-              value="FARMACIA EXTERNA (CONSUMO)">
-            <label class="form-check-label" for="inlineRadio2">Farm. EXTERNA</label>
-          </div>
-        </div>
-      </div>
+    <div id="form-register" >
       <div class="form-group">
         <label for="medInput">Medicamento</label>
-        <input type="search" class="form-control" list="medicamentSelection" id='medInput' name="medicament"
-          onchange="getSheet('ProdutoLote!A2:D',updateFormMedName)">
+        <input type="search" class="form-control" list="medicamentSelection" id='medInput' name="medicament" onchange="
+        getSheet('ProdutoLote!A1:D', 
+          function(data) {
+            updateFormMedName(data);
+            data = data.filter(function (el) { return el[0] == document.getElementById('medInput').value; });
+            createTable(data,'medicamentList',ignore=[2], caption='ESTOQUE')
+          });
+          getSheet('Inventario!E1:H', 
+          function(data) {
+            data = data.filter(function (el) { return el[0] == document.getElementById('medInput').value; });
+           createTable(data,'inventoryList', ignore=[2], caption='INVENTARIO')})">
         <datalist id="medicamentSelection">
         </datalist>
       </div>
@@ -107,7 +112,7 @@
 
           <div class="col">
 
-            <button onclick="sendReg()" class="btn btn-primary">Enviar Saída</button>
+            <button onclick="sendInventory()" class="btn btn-primary">Enviar Saída</button>
           </div>
           <div class="col">
 
@@ -116,6 +121,14 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="table-responsive-lg" style="max-width: 90%;">
+      <table class="table" style="font-size:11px" id="medicamentList">
+
+      </table>
+      <table class="table" style="font-size:11px" id="inventoryList">
+
+      </table>
     </div>
   </div>
   <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
@@ -175,8 +188,6 @@
           console.error(err)
         })
     })
-
-
 
     function startVideo(codeReader) {
       var selectedDeviceId = document.getElementById('sourceSelect').value
