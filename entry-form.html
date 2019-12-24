@@ -2,7 +2,7 @@
 <html lang="pt">
 
 <head>
-  <title>Stock AUX - Registro</title>
+  <title>Stock AUX - Entradas</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"
@@ -19,7 +19,6 @@
 
 <body>
   <div w3-include-html="nav.html"></div>
-
   <div class="form-row">
     <div class="col">
       <button id="authorize_button" class="btn btn-primary mb-2" style="display: none;">Login</button>
@@ -28,42 +27,31 @@
       <button id="signout_button" class="btn btn-primary mb-2" style="display: none;">Logoff</button>
     </div>
   </div>
-
-  <h4 align="center">Saídas</h4>
+  <h4 align="center">Entradas</h4>
   <div class="container-sm">
     <div w3-include-html="cam.html"></div>
-
-    <div id="base-form" style="display: none;">
-
+    <div class="form-group">
+      <label for="medInput">Origem</label>
+      <input type="search" class="form-control" list="originSelection" id='originInput' name="origin">
+      <datalist id="originSelection">
+      </datalist>
+    </div>
+    <div class="form-group">
+      <label for="comments">Observação</label>
+      <input type="text" class="form-control" id='comments' name="comments">
+    </div>
+    <div id="base-form">
+      <div w3-include-html="base-form.html"></div>
       <div class="form-group">
-        <div class="container">
-          <div class="form-row">
-            <div class="col">
-              <input class="form-check-input" type="radio" name="destinationRadio" id="inlineRadio1"
-                value="FARMACIA INTERNA (CONSUMO)" checked>
-              <label class="form-check-label" for="inlineRadio1">Farm. INTERNA</label>
-            </div>
-            <div class="col">
-              <input class="form-check-input" type="radio" name="destinationRadio" id="inlineRadio2"
-                value="FARMACIA EXTERNA (CONSUMO)">
-              <label class="form-check-label" for="inlineRadio2">Farm. EXTERNA</label>
-            </div>
-          </div>
-        </div>
-        <div w3-include-html="base-form.html"></div>
-
         <label for="qnt">Quantidade</label>
         <div class="form-row">
           <div class="col">
             <input type="search" class="form-control" type="number" id='qnt' name="qnt">
           </div>
-
           <div class="col">
-
-            <button onclick="sendReg()" class="btn btn-primary">Enviar Saída</button>
+            <button onclick="sendEntry()" class="btn btn-primary">Enviar Entrada</button>
           </div>
           <div class="col">
-
             <button id="sendCodId" align="right" class="btn btn-primary" style="display: none;"
               onclick="sendCod()">Cadatrar Código</button>
           </div>
@@ -81,8 +69,11 @@
         initClient(function(){
         getSheet('Medicamentos!A2:A',
         function(data){updateList(data, 'medicamentSelection')});
+        getSheet('Origens!A2:A',
+        function(data){updateList(data, 'originSelection')});
       });
     })" onreadystatechange="if (this.readyState === 'complete') this.onload()">
     </script>
 </body>
+
 </html>

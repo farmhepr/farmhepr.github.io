@@ -1,0 +1,21 @@
+<div class="form-group">
+  <label for="medInput">Medicamento</label>
+  <input type="search" class="form-control" list="medicamentSelection" id='medInput' name="medicament"
+    onchange="getSheet('ProdutoLote!A2:D',updateFormMedName)">
+  <datalist id="medicamentSelection">
+  </datalist>
+</div>
+
+<div class="form-group">
+  <label for="seriesInput">Lote</label>
+  <input type="search" class="form-control" list="seriesSelection" id='seriesInput' name="series" onchange="valSel()">
+  <datalist id="seriesSelection">
+  </datalist>
+</div>
+
+<div class="form-group">
+  <label for="valInput">Validade</label>
+  <input type="search" class="form-control" list="valDateSelection" id='valInput' name="valDate">
+  <datalist id="valDateSelection">
+  </datalist>
+</div>
