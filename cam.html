@@ -10,7 +10,7 @@
     <label>Código de barras</label>
     <div class="form-row">
         <div class="col-7">
-            <input type="search" class="form-control" id="bar_code" readonly/>
+            <input type="search" class="form-control" id="bar_code" readonly />
         </div>
         <div class="col">
             <button id="searchCode" onclick="getSheet('BarCode!A2:D', updateFormBarCode); 
@@ -18,8 +18,9 @@
               " class="btn btn-primary mb-2"><i class="fas fa-search"></i></button>
         </div>
         <div class="col">
-            <button id="startScanner" onclick="document.getElementById('scanner-div').style.display='block';"
-                class="btn btn-primary mb-2"><i class="fas fa-barcode"></i></button>
+            <button id="startScanner" onclick="
+                document.getElementById('scanner-div').style.display='block';
+                clearBaseForm();" class="btn btn-primary mb-2"><i class="fas fa-barcode"></i></button>
 
         </div>
     </div>
@@ -27,4 +28,3 @@
         style="width:100%;max-width:90%;"></select>
 
 </div>
-

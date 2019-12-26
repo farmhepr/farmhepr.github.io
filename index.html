@@ -19,7 +19,6 @@
 
 <body>
   <div w3-include-html="nav.html"></div>
-
   <div class="form-row">
     <div class="col">
       <button id="authorize_button" class="btn btn-primary mb-2" style="display: none;">Login</button>
@@ -28,34 +27,30 @@
       <button id="signout_button" class="btn btn-primary mb-2" style="display: none;">Logoff</button>
     </div>
   </div>
-
   <h4 align="center">Saídas</h4>
   <div class="container-sm">
     <div w3-include-html="cam.html"></div>
-
-    <div id="base-form" style="display: none;">
-
-      <div class="form-group">
-        <div class="container">
-          <div class="form-row">
-            <div class="col">
-              <input class="form-check-input" type="radio" name="destinationRadio" id="inlineRadio1"
-                value="FARMACIA INTERNA (CONSUMO)" checked>
-              <label class="form-check-label" for="inlineRadio1">Farm. INTERNA</label>
-            </div>
-            <div class="col">
-              <input class="form-check-input" type="radio" name="destinationRadio" id="inlineRadio2"
-                value="FARMACIA EXTERNA (CONSUMO)">
-              <label class="form-check-label" for="inlineRadio2">Farm. EXTERNA</label>
-            </div>
+    <div class="form-group">
+      <div class="container">
+        <div class="form-row">
+          <div class="col">
+            <input class="form-check-input" type="radio" name="destinationRadio" id="inlineRadio1"
+              value="FARMACIA INTERNA (CONSUMO)" checked>
+            <label class="form-check-label" for="inlineRadio1">Farm. INTERNA</label>
+          </div>
+          <div class="col">
+            <input class="form-check-input" type="radio" name="destinationRadio" id="inlineRadio2"
+              value="FARMACIA EXTERNA (CONSUMO)">
+            <label class="form-check-label" for="inlineRadio2">Farm. EXTERNA</label>
           </div>
         </div>
+      </div>
+      <div id="base-form" style="display: none;">
         <div w3-include-html="base-form.html"></div>
-
         <label for="qnt">Quantidade</label>
         <div class="form-row">
           <div class="col">
-            <input type="search" class="form-control" type="number" id='qnt' name="qnt">
+            <input class="form-control" type="number" id='qnt' name="qnt">
           </div>
 
           <div class="col">
@@ -85,4 +80,5 @@
     })" onreadystatechange="if (this.readyState === 'complete') this.onload()">
     </script>
 </body>
+
 </html>

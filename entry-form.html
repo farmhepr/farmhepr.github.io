@@ -31,7 +31,7 @@
   <div class="container-sm">
     <div w3-include-html="cam.html"></div>
     <div class="form-group">
-      <label for="medInput">Origem</label>
+      <label for="originInput">Origem</label>
       <input type="search" class="form-control" list="originSelection" id='originInput' name="origin">
       <datalist id="originSelection">
       </datalist>
@@ -40,13 +40,13 @@
       <label for="comments">Observação</label>
       <input type="text" class="form-control" id='comments' name="comments">
     </div>
-    <div id="base-form">
+    <div id="base-form" style="display: none;">
       <div w3-include-html="base-form.html"></div>
       <div class="form-group">
         <label for="qnt">Quantidade</label>
         <div class="form-row">
           <div class="col">
-            <input type="search" class="form-control" type="number" id='qnt' name="qnt">
+            <input class="form-control" type="number" id='qnt' name="qnt">
           </div>
           <div class="col">
             <button onclick="sendEntry()" class="btn btn-primary">Enviar Entrada</button>

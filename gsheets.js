@@ -19,7 +19,6 @@ function handleClientLoad(callback) {
   gapi.load('client:auth2', callback);
 }
 
-
 function initClient(callback) {
   gapi.client.init({
     apiKey: API_KEY,
@@ -32,9 +31,11 @@ function initClient(callback) {
     isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get()
     // Handle the initial sign-in state.
     updateSigninStatus(isSignedIn);
+
     if (isSignedIn) {
       callback();
     }
+
     authorizeButton.onclick = handleAuthClick;
     signoutButton.onclick = handleSignoutClick;
   }, function (error) {
@@ -68,45 +69,63 @@ function appendPre(message) {
 
 function updateList(data, listId) {
   var str = '';
+
   for (var i = 0; i < data.length; ++i) {
     str += '<option value="' + data[i] + '" />'; // Storing options in variable
   }
-  var list = document.getElementById(listId);
+
+  var list       = document.getElementById(listId);
   list.innerHTML = str;
 }
 
+function elementInList(element, selectId) {
+  var select = document.getElementById(selectId);
+  var list   = select.querySelectorAll('option');
+
+  for (var i = 0; i < list.length; i++) {
+    if (element == list[i].value) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function updateFormMedName(data) {
-  var medName = document.getElementById("medInput").value;
-  var seriesNameOptions = document.getElementById("seriesSelection");
-  var valDateOptions = document.getElementById("valDateSelection");
+  var medName              = document.getElementById("medInput").value;
+  var seriesNameOptions    = document.getElementById("seriesSelection");
+  var valDateOptions       = document.getElementById("valDateSelection");
   var seriesNameOptionsStr = '';
-  var valDateOptionsStr = '';
-  var selectedItems = data.filter(function (el) { return el[0] == medName; })
+  var valDateOptionsStr    = '';
+  var selectedItems        = data.filter(function (el) { return el[0] == medName; })
   console.log(selectedItems)
 
   for (var i = 0; i < selectedItems.length; ++i) {
     seriesNameOptionsStr += `<option selected="selected" hidden></option>`
     seriesNameOptionsStr += `<option value="${selectedItems[i][1]}">${selectedItems[i][1]}</option>`; // Storing options in variable
-    valDateOptionsStr += '<option data-option=' + selectedItems[i][1] + ' value="' + selectedItems[i][2] + '" />'; // Storing options in variable
+    valDateOptionsStr    += '<option data-option=' + selectedItems[i][1] + ' value="' + selectedItems[i][2] + '" />'; // Storing options in variable
   }
+
   seriesNameOptions.innerHTML = seriesNameOptionsStr;
-  valDateOptions.innerHTML = valDateOptionsStr;
+  valDateOptions.innerHTML    = valDateOptionsStr;
 }
 
 function updateFormBarCode(data) {
-  var barCode = document.getElementById('bar_code').value;
-  var barCodeSelection = document.getElementById('barCodeSelection')
+  var barCode           = document.getElementById('bar_code').value;
+  var barCodeSelection  = document.getElementById('barCodeSelection')
   var barCodeOptionsStr = '';
-  data = typeof data === "undefined" ? '' : data;
+  data                  = typeof data === "undefined" ? '' : data;
+  
   if (data != '') {
     var selectedItems = data.filter(function (el) { return el[0] == barCode; });
     console.log(selectedItems.length)
+    
     if (selectedItems.length != 0) {
       barCodeOptionsStr += `<option selected="selected" hidden>Selecione o produto</option>`
       document.getElementById('base-form').style.display = 'none';
     } else {
       document.getElementById('base-form').style.display = 'block';
     }
+
     for (var i = 0; i < selectedItems.length; ++i) {
       selectedItems[i][1] = typeof selectedItems[i][1] === "undefined" ? '' : selectedItems[i][1];
       selectedItems[i][2] = typeof selectedItems[i][2] === "undefined" ? '' : selectedItems[i][2];
@@ -115,47 +134,50 @@ function updateFormBarCode(data) {
       barCodeOptionsStr += `<option value='${JSON.stringify(selectedItems[i])}'>${selectedItems[i][1]} \nL: ${selectedItems[i][2]}</option>`;
     }
   }
+  
   var no_items = ['', '', '', '']
   barCodeOptionsStr += `<option value=${JSON.stringify(no_items)}>Produto não cadastrado</option>`;
   barCodeSelection.innerHTML = barCodeOptionsStr;
   updateFormSelectBarCode();
-
 }
 
 function updateFormSelectBarCode() {
-  var barCodeSelection = document.getElementById('barCodeSelection').value;
-  console.log(barCodeSelection);
-  var medInput = document.getElementById('medInput');
-  var seriesInput = document.getElementById('seriesInput');
-  var valInput = document.getElementById('valInput');
-  selectedItem = JSON.parse(barCodeSelection);
-  medInput.value = selectedItem[1];
-  seriesInput.value = selectedItem[2];
-  valInput.value = selectedItem[3];
-  document.getElementById('base-form').style.display = 'block';
+  var barCodeSelection   = document.getElementById('barCodeSelection').value;
+  var medInput           = document.getElementById('medInput');
+  var seriesInput        = document.getElementById('seriesInput');
+  var valInput           = document.getElementById('valInput');
+  var baseForm           = document.getElementById('base-form');
+  var selectedItem       = JSON.parse(barCodeSelection);
+  medInput.value         = selectedItem[1];
+  seriesInput.value      = selectedItem[2];
+  valInput.value         = selectedItem[3];
+  baseForm.style.display = 'block';
+
   if (barCodeSelection == '["","","",""]') {
-    var barCodeValue = document.getElementById('bar_code').value;
-    medInput.readOnly = false;
+    var barCodeValue     = document.getElementById('bar_code').value;
+    medInput.readOnly    = false;
     seriesInput.readOnly = false;
-    valInput.readOnly = false;
-    regex = /[0-9]{13}/
-    if(regex.test(barCodeValue)) {
+    valInput.readOnly    = false;
+    regex                = /[0-9]{13}/
+
+    if (regex.test(barCodeValue)) {
       sendCodButton.style.display = 'block';
     }
   } else {
-    medInput.readOnly = true;
-    seriesInput.readOnly = true;
-    valInput.readOnly = true;
+    medInput.readOnly           = true;
+    seriesInput.readOnly        = true;
+    valInput.readOnly           = true;
     sendCodButton.style.display = 'none';
   }
 }
 
 function valSel() {
-  var seriesVal = document.getElementById('seriesInput').value;
-  var valForm = document.getElementById('valDateSelection');
-  var options = valForm.querySelectorAll('option');
-  var valDateInput = document.getElementById('valInput');
+  var seriesVal      = document.getElementById('seriesInput').value;
+  var valDateInput   = document.getElementById('valInput');
+  var valForm        = document.getElementById('valDateSelection');
+  var options        = valForm.querySelectorAll('option');
   valDateInput.value = '';
+
   for (var i = 0; i < options.length; i++) {
     if (options[i].dataset.option === seriesVal) {
       valDateInput.value = options[i].value;
@@ -194,19 +216,50 @@ function getSheet(sheetRange, callback) {
     range: sheetRange,
   }).then(function (response) {
     var data = response.result;
-    if (data.values.length > 0) {
-      console.log(data.values)
-      callback(data.values);
-      return data.values;
-    } else {
-      alert('Dados não encontrados ' + sheetRange)
-      appendPre('No data found.');
-    }
+    console.log(data.values)
+    callback(data.values);
+    return data.values;
+
   }, function (response) {
     gapi.auth2.getAuthInstance().signIn();
     alert('Erro ao carregar ' + sheetRange)
     appendPre('Error: ' + response.result.error.message);
   });
+}
+
+function sendEntry() {
+  medName    = document.getElementById('medInput').value;
+  seriesName = document.getElementById('seriesInput').value;
+  valDate    = document.getElementById('valInput').value;
+  value      = document.getElementById('qnt').value;
+  originName = document.getElementById('originInput').value;
+  obs        = document.getElementById('comments').value;
+  rowArray   = ['ENTRADA', dataAtualFormatada(), originName, medName, seriesName, valDate, value, 0, obs];
+  orgInList  = elementInList(originName, 'originSelection');
+  medInList  = elementInList(medName, 'medicamentSelection');
+  qntVerif   = value > 0;
+  if (orgInList && medInList && qntVerif) {
+    info = `
+    Destino: ${originName}
+    Observação: ${obs}
+    Medicamento: ${medName}
+    Lote: ${seriesName} 
+    Validade: ${valDate}
+    Quantidade: ${value}`
+    
+    if (window.confirm(`Por favor confirme os dados de saida e aperte OK 
+       ${info} `)) {
+      insertRowSheet('Entradas!B2:I', rowArray, function () {
+        alert('Saida efetuada com sucesso\n' + info);
+        document.getElementById('startScanner').click();
+      });
+    }
+  } else {
+    alert(`
+    Erro: 
+    Verifique se a origem e medicamento estão na lista.
+    Verifique se a quantidade é > 0`);
+  }
 }
 
 function sendReg() {
@@ -216,24 +269,37 @@ function sendReg() {
   valDate = document.getElementById('valInput').value;
   value = document.getElementById('qnt').value;
   var destinationValue = '';
+
   for (var i = 0, length = destinations.length; i < length; i++) {
     if (destinations[i].checked) {
       destinationValue = destinations[i].value;
       break;
     }
-  } rowArray = ['SAIDA', dataAtualFormatada(), destinationValue, medName, seriesName, valDate, 0, value];
-  info = `
-  Destino: ${destinationValue}
-  Medicamento: ${medName}
-  Lote: ${seriesName} 
-  Validade: ${valDate}
-  Quantidade: ${value}`
-  if (window.confirm(`Por favor confirme os dados de saida e aperte OK 
-     ${info} `)) {
-    insertRowSheet('Saidas!B2:I', rowArray, function () {
-      alert('Saida efetuada com sucesso\n' + info)
-      clearBaseForm();
-    });
+  }
+  
+  rowArray = ['SAIDA', dataAtualFormatada(), destinationValue, medName, seriesName, valDate, 0, value];
+  medInList  = elementInList(medName, 'medicamentSelection');
+  qntVerif   = value > 0;
+
+  if (medInList && qntVerif) {
+    info = `
+    Destino: ${destinationValue}
+    Medicamento: ${medName}
+    Lote: ${seriesName} 
+    Validade: ${valDate}
+    Quantidade: ${value}`
+    if (window.confirm(`Por favor confirme os dados de saida e aperte OK 
+      ${info} `)) {
+      insertRowSheet('Saidas!B2:I', rowArray, function () {
+        alert('Saida efetuada com sucesso\n' + info)
+        document.getElementById('startScanner').click();
+      });
+    }
+  } else {
+    alert(`
+    Erro: 
+    Verifique se o medicamento está na lista.
+    Verifique se a quantidade é > 0`);
   }
 }
 
@@ -243,7 +309,8 @@ function sendCod() {
   seriesName = document.getElementById('seriesInput').value;
   valDate = document.getElementById('valInput').value;
   rowArray = [barCode, medName, seriesName, valDate];
-  info = `Código de barra: ${barCode}
+  info = `
+  Código de barra: ${barCode}
   Medicamento: ${medName}
   Lote: ${seriesName} 
   Validade: ${valDate}`
@@ -270,71 +337,49 @@ function createTable(tableData, tableId, ignore = [], caption = '', size = 10) {
   var table = document.getElementById(tableId);
   var tableBody = document.createElement('tbody');
   table.innerHTML = '';
-
-  // for (var i = 0; i < tableData.length; i++) {
-  //   var row = document.createElement('tr');
-  //   var rowData = tableData[i];
-  //   for (var j = 0; j < tableData[i].length; j++) {
-  //     var cell = document.createElement('td');
-  //     if (!ignore.includes(j)) {
-  //       cell.appendChild(document.createTextNode(tableData[i][j]));
-  //       row.appendChild(cell);
-  //     }
-  //   }
-  //   tableBody.appendChild(row);
-  // }
-  for (var i = tableData.length-1; i >= 0 && i>= tableData.length-10; i--) {
-    var row = document.createElement('tr');
-    var rowData = tableData[i];
-    for (var j = 0; j < tableData[i].length; j++) {
-      var cell = document.createElement('td');
-      if (!ignore.includes(j)) {
-        cell.appendChild(document.createTextNode(tableData[i][j]));
-        row.appendChild(cell);
-      }
-    }
-    tableBody.appendChild(row);
-  }
-  table.appendChild(tableBody);
-  document.body.appendChild(table);
   captionObj = table.createCaption();
   captionObj.innerHTML = caption
-}
 
-function sendEntry() {
-  medName = document.getElementById('medInput').value;
-  seriesName = document.getElementById('seriesInput').value;
-  valDate = document.getElementById('valInput').value;
-  value = document.getElementById('qnt').value;
-  destinationValue = document.getElementById('originInput').value;
-  obs = document.getElementById('comments').value;
-  rowArray = ['ENTRADA', dataAtualFormatada(), destinationValue, medName, seriesName, valDate, value, 0, obs];
-  info = `
-  Destino: ${destinationValue}
-  Observação: ${obs}
-  Medicamento: ${medName}
-  Lote: ${seriesName} 
-  Validade: ${valDate}
-  Quantidade: ${value}`
-  if (window.confirm(`Por favor confirme os dados de saida e aperte OK 
-     ${info} `)) {
-    insertRowSheet('Entradas!B2:I', rowArray, function () {
-      alert('Saida efetuada com sucesso\n' + info);
-      clearBaseForm();
-    });
+  if ( !(typeof tableData === "undefined")) {
+    // for (var i = 0; i < tableData.length; i++) {
+    //   var row = document.createElement('tr');
+    //   var rowData = tableData[i];
+    //   for (var j = 0; j < tableData[i].length; j++) {
+    //     var cell = document.createElement('td');
+    //     if (!ignore.includes(j)) {
+    //       cell.appendChild(document.createTextNode(tableData[i][j]));
+    //       row.appendChild(cell);
+    //     }
+    //   }
+    //   tableBody.appendChild(row);
+    // }
+    for (var i = tableData.length-1; i >= 0 && i>= tableData.length-10; i--) {
+      var row = document.createElement('tr');
+      var rowData = tableData[i];
+      for (var j = 0; j < tableData[i].length; j++) {
+        var cell = document.createElement('td');
+        if (!ignore.includes(j)) {
+          cell.appendChild(document.createTextNode(tableData[i][j]));
+          row.appendChild(cell);
+        }
+      }
+      tableBody.appendChild(row);
+    }
+    table.appendChild(tableBody);
+    document.body.appendChild(table);
   }
+
 }
 
 function clearBaseForm() {
-  document.getElementById('medInput').value = '';
-  document.getElementById('seriesInput').value = '';
-  document.getElementById('valInput').value = '';
-  document.getElementById('qnt').value = '';
-  document.getElementById('startScanner').click();
-  medInput.readOnly = false;
-  seriesInput.readOnly = false;
-  valInput.readOnly = false;
-  updateFormBarCode();
-  document.getElementById('base-form').style.display = 'none';
-
+  document.getElementById('base-form').style.display    = 'none';
+  document.getElementById('bar_code').value             = '';
+  document.getElementById('medInput').value             = '';
+  document.getElementById('seriesInput').value          = '';
+  document.getElementById('valInput').value             = '';
+  document.getElementById('qnt').value                  = '';
+  document.getElementById('barCodeSelection').innerHTML = '';
+  medInput.readOnly                                     = false;
+  seriesInput.readOnly                                  = false;
+  valInput.readOnly                                     = false;
 }
