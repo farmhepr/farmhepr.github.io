@@ -32,16 +32,65 @@
     <div w3-include-html="cam.html"></div>
     <div class="form-group">
       <label for="originInput">Origem</label>
-      <input type="search" class="form-control" list="originSelection" id='originInput' name="origin">
-      <datalist id="originSelection">
-      </datalist>
+      <select class="form-control" name="origin" id="originSelection">
+      </select>
     </div>
     <div class="form-group">
       <label for="comments">Observação</label>
       <input type="text" class="form-control" id='comments' name="comments">
     </div>
     <div id="base-form" style="display: none;">
-      <div w3-include-html="base-form.html"></div>
+      <div class="form-group">
+        <label for="medInput">Medicamento</label>
+        <input class="form-control" list="medicamentSelection" id='medInput' name="medicament" onchange="
+          getSheet('ProdutoLote!A2:D',updateFormMedName);
+          document.getElementById('medInput').blur()" onfocus="
+          document.getElementById('medInput').value='';
+          document.getElementById('valInput').readOnly = true;
+          updateFormMedName([]);" onblur="
+          var med = document.getElementById('medInput'); 
+          if (med.value != '' && !elementInList(med.value, 'medicamentSelection')) {
+            alert('Medicamento fora da lista definida');
+            med.value = '';
+          }">
+        <datalist id="medicamentSelection">
+        </datalist>
+      </div>
+
+      <div class="form-group">
+        <label for="seriesInput">Lote</label>
+        <input class="form-control" list="seriesSelection" id='seriesInput' name="series" onchange="
+        valSel(); 
+        document.getElementById('seriesInput').blur();" onfocus="
+        document.getElementById('seriesInput').value='';
+        valSel();
+        document.getElementById('valInput').readOnly = true;
+" onblur="
+        var series = document.getElementById('seriesInput'); 
+        if (series.value != '' && !elementInList(series.value, 'seriesSelection')) {
+          document.getElementById('valInput').readOnly = false;
+        }">
+        <datalist id="seriesSelection">
+        </datalist>
+      </div>
+
+      <div class="form-group">
+        <label for="valInput">Validade</label>
+        <input class="form-control" list="valDateSelection" id='valInput' name="valDate" maxlength="10" readonly
+          onkeypress="
+        var date = document.getElementById('valInput');
+        digit = date.value.length;
+        if (digit == 2 || digit == 5) {
+          date.value += '/'
+        }" onblur="
+        var date = document.getElementById('valInput');
+        if (date.value != '' && !isValidDate(date.value)) {
+          alert('Data inválida');
+          date.value = '';
+        }">
+        <datalist id="valDateSelection">
+        </datalist>
+      </div>
       <div class="form-group">
         <label for="qnt">Quantidade</label>
         <div class="form-row">

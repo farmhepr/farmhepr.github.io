@@ -68,10 +68,10 @@ function appendPre(message) {
 }
 
 function updateList(data, listId) {
-  var str = '';
+  var str = `<option selected="selected" hidden></option>`;
 
   for (var i = 0; i < data.length; ++i) {
-    str += '<option value="' + data[i] + '" />'; // Storing options in variable
+    str += `<option value='${data[i]}'>${data[i]}</option>`;
   }
 
   var list       = document.getElementById(listId);
@@ -80,6 +80,9 @@ function updateList(data, listId) {
 
 function elementInList(element, selectId) {
   var select = document.getElementById(selectId);
+  if (select == null) {
+    return false;
+  }
   var list   = select.querySelectorAll('option');
 
   for (var i = 0; i < list.length; i++) {
@@ -97,14 +100,15 @@ function updateFormMedName(data) {
   var seriesNameOptionsStr = '';
   var valDateOptionsStr    = '';
   var selectedItems        = data.filter(function (el) { return el[0] == medName; })
+  document.getElementById('seriesInput').value = '';
+  document.getElementById('valInput').value    = '';
   console.log(selectedItems)
+  seriesNameOptionsStr += `<option selected="selected" hidden></option>`;
 
   for (var i = 0; i < selectedItems.length; ++i) {
-    seriesNameOptionsStr += `<option selected="selected" hidden></option>`
     seriesNameOptionsStr += `<option value="${selectedItems[i][1]}">${selectedItems[i][1]}</option>`; // Storing options in variable
     valDateOptionsStr    += '<option data-option=' + selectedItems[i][1] + ' value="' + selectedItems[i][2] + '" />'; // Storing options in variable
   }
-
   seriesNameOptions.innerHTML = seriesNameOptionsStr;
   valDateOptions.innerHTML    = valDateOptionsStr;
 }
@@ -157,7 +161,6 @@ function updateFormSelectBarCode() {
     var barCodeValue     = document.getElementById('bar_code').value;
     medInput.readOnly    = false;
     seriesInput.readOnly = false;
-    valInput.readOnly    = false;
     regex                = /[0-9]{13}/
 
     if (regex.test(barCodeValue)) {
@@ -181,6 +184,7 @@ function valSel() {
   for (var i = 0; i < options.length; i++) {
     if (options[i].dataset.option === seriesVal) {
       valDateInput.value = options[i].value;
+      valDateInput.readOnly = true;
     }
   }
 }
@@ -232,13 +236,12 @@ function sendEntry() {
   seriesName = document.getElementById('seriesInput').value;
   valDate    = document.getElementById('valInput').value;
   value      = document.getElementById('qnt').value;
-  originName = document.getElementById('originInput').value;
+  originName = document.getElementById('originSelection').value;
   obs        = document.getElementById('comments').value;
   rowArray   = ['ENTRADA', dataAtualFormatada(), originName, medName, seriesName, valDate, value, 0, obs];
-  orgInList  = elementInList(originName, 'originSelection');
   medInList  = elementInList(medName, 'medicamentSelection');
   qntVerif   = value > 0;
-  if (orgInList && medInList && qntVerif) {
+  if (originName != '' && medInList && qntVerif) {
     info = `
     Destino: ${originName}
     Observação: ${obs}
@@ -381,5 +384,29 @@ function clearBaseForm() {
   document.getElementById('barCodeSelection').innerHTML = '';
   medInput.readOnly                                     = false;
   seriesInput.readOnly                                  = false;
-  valInput.readOnly                                     = false;
+}
+
+function isValidDate(dateString) {
+  // First check for the pattern
+  if(!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString))
+      return false;
+
+  // Parse the date parts to integers
+  var parts = dateString.split("/");
+  var day = parseInt(parts[0], 10);
+  var month = parseInt(parts[1], 10);
+  var year = parseInt(parts[2], 10);
+
+  // Check the ranges of month and year
+  if(year < 1000 || year > 3000 || month == 0 || month > 12)
+      return false;
+
+  var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+  // Adjust for leap years
+  if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+      monthLength[1] = 29;
+
+  // Check the range of the day
+  return day > 0 && day <= monthLength[month - 1] && dateString.length == 10;
 }

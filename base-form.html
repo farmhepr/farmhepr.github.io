@@ -1,21 +1,56 @@
 <div class="form-group">
   <label for="medInput">Medicamento</label>
-  <input type="search" class="form-control" list="medicamentSelection" id='medInput' name="medicament"
-    onchange="getSheet('ProdutoLote!A2:D',updateFormMedName)">
+  <input class="form-control" list="medicamentSelection" id='medInput' name="medicament"
+    onchange="
+    getSheet('ProdutoLote!A2:D',updateFormMedName);
+    document.getElementById('medInput').blur()" 
+    onfocus="
+    document.getElementById('medInput').value='';
+    updateFormMedName([]);"
+    onblur="
+    var med = document.getElementById('medInput'); 
+    if (med.value != '' && !elementInList(med.value, 'medicamentSelection')) {
+      alert('Medicamento fora da lista definida');
+      med.value = '';
+    }">
   <datalist id="medicamentSelection">
   </datalist>
 </div>
 
 <div class="form-group">
   <label for="seriesInput">Lote</label>
-  <input type="search" class="form-control" list="seriesSelection" id='seriesInput' name="series" onchange="valSel()">
+  <input class="form-control" list="seriesSelection" id='seriesInput' name="series" 
+  onchange="
+  valSel(); 
+  document.getElementById('seriesInput').blur();"
+  onfocus="
+  document.getElementById('seriesInput').value='';
+  valSel();"
+  onblur="
+  var series = document.getElementById('seriesInput'); 
+  if (series.value != '' && !elementInList(series.value, 'seriesSelection')) {
+    alert('Lote fora da lista definida');
+    series.value = '';
+  }">
   <datalist id="seriesSelection">
   </datalist>
 </div>
 
 <div class="form-group">
   <label for="valInput">Validade</label>
-  <input type="search" class="form-control" list="valDateSelection" id='valInput' name="valDate">
+  <input class="form-control" list="valDateSelection" id='valInput' name="valDate" maxlength="10" readonly 
+  onkeypress="
+  var date = document.getElementById('valInput');
+  digit = date.value.length;
+  if (digit == 2 || digit == 5) {
+    date.value += '/'
+  }" 
+  onblur="
+  var date = document.getElementById('valInput');
+  if (date.value != '' && !isValidDate(date.value)) {
+    alert('Data inválida');
+    date.value = '';
+  }">
   <datalist id="valDateSelection">
   </datalist>
 </div>
