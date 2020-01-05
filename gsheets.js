@@ -382,8 +382,9 @@ function clearBaseForm() {
   document.getElementById('valInput').value             = '';
   document.getElementById('qnt').value                  = '';
   document.getElementById('barCodeSelection').innerHTML = '';
-  medInput.readOnly                                     = false;
-  seriesInput.readOnly                                  = false;
+  document.getElementById('medInput').readOnly          = false;
+  document.getElementById('seriesInput').readOnly       = false;
+  document.getElementById('valInput').readOnly          = true;
 }
 
 function isValidDate(dateString) {
