@@ -243,8 +243,7 @@
             $('#outs-form').on('click', function () {
                 $('.entry').hide();
                 $('.lists').hide();
-                $('#scanner-div').show();
-                clearBaseForm();
+                $('#startScanner').click();
                 entry_form = false;
                 out_form = true;
                 $('.outs').show();
@@ -253,8 +252,7 @@
             $('#entry-form').on('click', function () {
                 $('.outs').hide();
                 $('.lists').hide();
-                $('#scanner-div').show();
-                clearBaseForm();
+                $('#startScanner').click();
                 entry_form = true;
                 out_form = false;
                 $('.entry').show();
@@ -263,8 +261,7 @@
             $('#lists-form').on('click', function () {
                 $('.outs').hide();
                 $('.entry').hide();
-                $('#scanner-div').hide();
-                clearBaseForm();
+                $('#base-form').hide();
                 entry_form = false;
                 out_form = false;
                 $('.lists').show();

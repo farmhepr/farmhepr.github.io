@@ -31,6 +31,11 @@ window.addEventListener('load', function () {
                 console.log('Reset.')
             })
 
+            document.getElementById('lists-form').addEventListener('click', () => {
+                codeReader.reset();
+                console.log('Reset.')
+            })
+
             document.getElementById('sourceSelect').addEventListener('change', () => {
                 codeReader.reset()
                 codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
