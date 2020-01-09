@@ -238,7 +238,7 @@ function sendEntry() {
   value      = document.getElementById('qnt').value;
   originName = document.getElementById('originSelection').value;
   obs        = document.getElementById('comments').value;
-  rowArray   = ['ENTRADA', dataAtualFormatada(), originName, medName, seriesName, valDate, value, 0, obs];
+  rowArray   = [`ENTRADA`, `${dataAtualFormatada()}`, `${originName}`, `${medName}`, `${seriesName}`, `${valDate}`, `${value}`, `${0}`, `${obs}`];
   medInList  = elementInList(medName, 'medicamentSelection');
   qntVerif   = value > 0;
   if (originName != '' && medInList && qntVerif) {
@@ -280,7 +280,7 @@ function sendReg() {
     }
   }
   
-  rowArray = ['SAIDA', dataAtualFormatada(), destinationValue, medName, seriesName, valDate, 0, value];
+  rowArray = [`SAIDA`, `${dataAtualFormatada()}`, `${destinationValue}`, `${medName}`, `${seriesName}`, `${valDate}`, `${0}`, `${value}`];
   medInList  = elementInList(medName, 'medicamentSelection');
   qntVerif   = value > 0;
 
@@ -311,7 +311,7 @@ function sendCod() {
   medName = document.getElementById('medInput').value;
   seriesName = document.getElementById('seriesInput').value;
   valDate = document.getElementById('valInput').value;
-  rowArray = [barCode, medName, seriesName, valDate];
+  rowArray = [`${barCode}`, `${medName}`, `${seriesName}`, `${valDate}`];
   info = `
   Código de barra: ${barCode}
   Medicamento: ${medName}
